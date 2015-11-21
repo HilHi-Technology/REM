@@ -26,7 +26,7 @@ public class PlayerScript : MonoBehaviour {
         rigidbody2D.velocity = new Vector2(Input.GetAxisRaw("Horizontal") * speed, rigidbody2D.velocity.y);
 
         grounded = Physics2D.OverlapCircle(groundChecker.position, groundCheckerRadius, groundLayerMask);
-        print(grounded);
+        //print(grounded);
         if (grounded && Input.GetButton("Jump")) {
             rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, jumpStrength);
             grounded = false;

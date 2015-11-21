@@ -10,16 +10,22 @@ public class ParticleChaseScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         particleSystem = GetComponent<ParticleSystem>();
+        particleSystem.simulationSpace = ParticleSystemSimulationSpace.World;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        if (Input.GetKey("z")) {
+            absorbParticle();
+        }
+	}
+
+    void absorbParticle() {
         particleList = new ParticleSystem.Particle[particleSystem.particleCount];
         particleSystem.GetParticles(particleList);
-        for(int i = 0; i < particleList.Length; i ++){
-            particleList[i].velocity = new Vector3((target.position.x - particleList[i].position.x), 0, target.position.z - particleList[i].position.z);
-            //particleList[i].velocity = new Vector3(15, 15, 0);
+        for (int i = 0; i < particleList.Length; i++) {
+            particleList[i].velocity = new Vector3(target.position.x - particleList[i].position.x, target.position.y - particleList[i].position.y, 0);
         }
         particleSystem.SetParticles(particleList, particleList.Length);
-	}
+    }
 }
