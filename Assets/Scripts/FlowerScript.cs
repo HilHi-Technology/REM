@@ -1,13 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class RoseScript : MonoBehaviour {
+public class FlowerScript : MonoBehaviour {
+    [System.NonSerialized]
     public float grayScale;
-    public Renderer renderer;
+
+    private Renderer renderer;
 
 	// Use this for initialization
 	void Start () {
         renderer = GetComponent<Renderer>();
+        grayScale = 1;
 	}
 	
 	// Update is called once per frame
