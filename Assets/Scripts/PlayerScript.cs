@@ -12,6 +12,8 @@ public class PlayerScript : MonoBehaviour {
     private Rigidbody2D rigidbody2D;
 
 
+
+
 	void Start () {
         // Get the player's rigidbody2D component for movement uses.
         rigidbody2D = GetComponent<Rigidbody2D>();
