@@ -3,12 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class ParticleScript : MonoBehaviour {
-    public Transform target;  // The target for the particles to chase.
-
     public GameObject particleSystemObject;
     private ParticleSystem particleSystem;  // The original particle system.
 
-    public GameObject flower;
+    private Transform flower;
     private FlowerScript flowerScript;
 
     private float grayScale;
@@ -21,6 +19,7 @@ public class ParticleScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        flower = GameObject.FindWithTag("Flower").transform;
         grayScale = 1;
         particleSystem = particleSystemObject.GetComponent<ParticleSystem>();
         particleSystem.simulationSpace = ParticleSystemSimulationSpace.World;  // Make the particles play in world space.
@@ -41,15 +40,17 @@ public class ParticleScript : MonoBehaviour {
         List<int> particleRemoveIndexList = new List<int>();
         particleSystem.GetParticles(particleList);
         if (Input.GetKey("z")) {
-            // Pressed the button to absorb particle
+            // Pressed the button to attract particles
             for (int i = 0; i < particleList.Length; i++) {
-                // All particles move toward target.
-                particleList[i].velocity = new Vector3(target.position.x - particleList[i].position.x, target.position.y - particleList[i].position.y, -1);
+                if (Vector2.Distance(particleList[i].position, flower.position) < flowerScript.particleAttractionRadius) {
+                    // Particles move toward target.
+                    particleList[i].velocity = new Vector3(flower.position.x - particleList[i].position.x, flower.position.y - particleList[i].position.y, -1);
+                }
             }
         }
         for (int i = 0; i < particleList.Length; i++) {
             // Check every particle if it is in absorption radius.
-            if (Vector2.Distance(particleList[i].position, target.position) < flowerScript.particleAbsorbRadius) {
+            if (Vector2.Distance(particleList[i].position, flower.position) < flowerScript.particleAbsorbRadius) {
                 // Slate particle for removal if it is in target's absorbtion radius.
                 particleRemoveIndexList.Add(i);
             }

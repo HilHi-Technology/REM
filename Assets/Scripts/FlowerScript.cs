@@ -4,7 +4,8 @@ using System.Collections;
 public class FlowerScript : MonoBehaviour {
     [System.NonSerialized]
     public float grayScale;
-    public float particleAbsorbRadius;  // How far away from target will the particle disappear.
+    public float particleAttractionRadius;  // Only particles within a certain radius to the flower can be sucked in.
+    public float particleAbsorbRadius;  // Particles close to the flower will disappear (absorbed).
 
     // Each particle absorbed will cause flower to be more saturated and the node to be less saturated.
     public float pointsPerParticleAbsorbed;
