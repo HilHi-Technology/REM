@@ -17,6 +17,7 @@ public class ParticleScript : MonoBehaviour {
     public float emissionMax; 
     public float emissionMin;
 
+    public float particleTurnSpeed;
 	// Use this for initialization
 	void Start () {
         flower = GameObject.FindWithTag("Flower").transform;
@@ -44,7 +45,7 @@ public class ParticleScript : MonoBehaviour {
             for (int i = 0; i < particleList.Length; i++) {
                 if (Vector2.Distance(particleList[i].position, flower.position) < flowerScript.particleAttractionRadius) {
                     // Particles move toward target.
-                    particleList[i].velocity = new Vector3(flower.position.x - particleList[i].position.x, flower.position.y - particleList[i].position.y, -1);
+                    particleList[i].velocity = Vector3.Lerp(particleList[i].velocity, new Vector3(flower.position.x - particleList[i].position.x, flower.position.y - particleList[i].position.y, -1), Time.deltaTime * particleTurnSpeed);
                 }
             }
         }
