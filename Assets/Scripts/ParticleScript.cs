@@ -9,8 +9,9 @@ public class ParticleScript : MonoBehaviour {
     private Transform flower;
     private FlowerScript flowerScript;
 
-    private float grayScale;
-    public float pointsDrainedPerParticle;  // Saturation is drained away from the node when particles are absorbed.
+    private float saturation;  // 0 is gray
+    private int saturationPoints;  // Current saturation points gained by absorbing saturation particles, each particle = 1 point.
+    public int maxSaturationPoints;  // Points needed to be fully saturated.
     private Renderer renderer;
 
     // Emission min and max scaled with grayscale.
@@ -21,7 +22,7 @@ public class ParticleScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         flower = GameObject.FindWithTag("Flower").transform;
-        grayScale = 1;
+        saturationPoints = maxSaturationPoints;
         particleSystem = particleSystemObject.GetComponent<ParticleSystem>();
         particleSystem.simulationSpace = ParticleSystemSimulationSpace.World;  // Make the particles play in world space.
         flowerScript = flower.GetComponent<FlowerScript>();
@@ -30,10 +31,16 @@ public class ParticleScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        grayScale = Mathf.Clamp01(grayScale);
-        renderer.material.SetFloat("_EffectAmount", grayScale);
-        particleSystem.emissionRate = ((emissionMax - emissionMin) * (grayScale)) + emissionMin;
-        if (grayScale == 0) {
+        if (saturationPoints > maxSaturationPoints) {
+            saturationPoints = maxSaturationPoints;
+        }
+        if (saturationPoints < 0) {
+            saturationPoints = 0;
+        }
+        saturation = (float)saturationPoints / maxSaturationPoints;
+        renderer.material.SetFloat("_EffectAmount", saturation);
+        particleSystem.emissionRate = ((emissionMax - emissionMin) * (saturation)) + emissionMin;
+        if (saturation == 0) {
             particleSystem.emissionRate = 0;
         }
 
@@ -65,8 +72,8 @@ public class ParticleScript : MonoBehaviour {
             // Remove all particles that are slated to be removed.
             tempList.RemoveAt((int)particleRemoveIndexList[i]);
             // Add saturation to the flower.
-            flowerScript.grayScale += flowerScript.pointsPerParticleAbsorbed;
-            grayScale -= pointsDrainedPerParticle;
+            flowerScript.saturationPoints += 1;
+            saturationPoints -= 1;
         }
         // Convert the list back into an array.
         particleList = tempList.ToArray();
