@@ -29,13 +29,15 @@ public class BunnyScript : MonoBehaviour {
     private bool aggroSwitch = false;  // Used to do things when switching to aggro only once.
     private float jumpTimer = 0;
     public float jumpTime;
-    public float maxJumpForce;
+    public float jumpForce;
     public float jumpAngle;  // In degrees
 
     public Transform groundChecker;  // A point on the bunny, used to check for ground.
     public LayerMask groundLayerMask;  // Only check for ground using ground, and nothing else.
     private float groundCheckerRadius;  // How large of a circle the checker is.
     private bool grounded;
+
+    public Transform player;
 
 
 
@@ -98,8 +100,11 @@ public class BunnyScript : MonoBehaviour {
             if (jumpTimer < 0) {
                 print("jump");
                 jumpTimer = jumpTime;
-                //rigidbody2D.velocity = new Vector3(maxJumpForce * Mathf.Cos(Mathf.Deg2Rad * jumpAngle), maxJumpForce * Mathf.Sin(Mathf.Deg2Rad * jumpAngle), 0);
-                rigidbody2D.AddForce(new Vector2(maxJumpForce * Mathf.Cos(Mathf.Deg2Rad * jumpAngle), maxJumpForce * Mathf.Sin(Mathf.Deg2Rad * jumpAngle)));
+                //float dist = Vector2.Distance(transform.position, player.position);  // Distance between bunny and player.
+                bool dirFromPlayer = transform.position.x < player.position.x;  // Where player is from bunny, true is right, false is left.
+                float forceX = Mathf.Cos(Mathf.Deg2Rad * (dirFromPlayer? jumpAngle : 180 + jumpAngle)) * jumpForce;
+                float forceY = Mathf.Sin(Mathf.Deg2Rad * jumpAngle) * jumpForce;
+                rigidbody2D.AddForce(new Vector2(forceX, forceY));
             }
             
         }
