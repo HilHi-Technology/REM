@@ -7,7 +7,7 @@ public class FlowerScript : MonoBehaviour {
     public float particleAttractionRadius;  // Only particles within a certain radius to the flower can be sucked in.
     public float particleAbsorbRadius;  // Particles close to the flower will disappear (absorbed).
 
-    [System.NonSerialized]
+    //[System.NonSerialized]
     public int saturationPoints;  // Current saturation points gained by absorbing saturation particles, each particle = 1 point.
     public int maxSaturationPoints;  // Points needed to be fully saturated.
 

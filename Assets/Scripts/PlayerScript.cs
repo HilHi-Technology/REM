@@ -18,7 +18,7 @@ public class PlayerScript : MonoBehaviour {
         // Get the player's rigidbody2D component for movement uses.
         rigidbody2D = GetComponent<Rigidbody2D>();
         groundCheckerRadius = GetComponent<CircleCollider2D>().radius;
-        print(groundCheckerRadius);
+        //print(groundCheckerRadius);
 	}
 	
 
