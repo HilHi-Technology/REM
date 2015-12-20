@@ -34,7 +34,7 @@ public class BunnyScript : MonoBehaviour {
 
     public Transform groundChecker;  // A point on the bunny, used to check for ground.
     public LayerMask groundLayerMask;  // Only check for ground using ground, and nothing else.
-    private float groundCheckerRadius;  // How large of a circle the checker is.
+    private float groundCheckRadius;  // How large of a circle the checker is.
     private bool grounded;
 
     public Transform player;
@@ -47,7 +47,12 @@ public class BunnyScript : MonoBehaviour {
 	void Start () {
         rigidbody2D = GetComponent<Rigidbody2D>();
         flowerScript = GameObject.FindWithTag("Flower").GetComponent<FlowerScript>();
-        groundCheckerRadius = transform.GetChild(0).GetComponent<CircleCollider2D>().radius;
+        foreach (Transform child in transform) {
+            if (child.tag == "GroundCheck") {
+                groundCheckRadius = child.GetComponent<CircleCollider2D>().radius;
+                break;
+            }
+        }
         //print(Mathf.Cos(Mathf.Deg2Rad * 60));
 	}
 	
@@ -87,7 +92,7 @@ public class BunnyScript : MonoBehaviour {
             }
         } else { 
             // Aggro
-            grounded = Physics2D.OverlapCircle(groundChecker.position, groundCheckerRadius, groundLayerMask);
+            grounded = Physics2D.OverlapCircle(groundChecker.position, groundCheckRadius, groundLayerMask);
             if (aggroSwitch) {
                 aggroSwitch = false;
                 rigidbody2D.velocity = Vector3.zero;
