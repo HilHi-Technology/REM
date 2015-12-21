@@ -10,7 +10,12 @@ public class PlayerScript : MonoBehaviour {
     private float groundCheckRadius;  // How large of a circle the checker is.
     private bool grounded;  // Whether the player is on the ground, for jump checking.
     private Rigidbody2D rigidbody2D;
+    private Transform flower;
+    private FlowerScript flowerScript;
 
+    public float invulnernableTime;  // Invulnerability period after damaged, in seconds.
+    private float invulnerableTimer;
+    private bool isInvulnerable = false;  // Player is invulnerable for a period after hit
 
 
 
@@ -23,12 +28,26 @@ public class PlayerScript : MonoBehaviour {
                 break;
             }
         }
+        foreach (Transform child in transform) {
+            if (child.tag == "Flower") {
+                flower = child.transform;
+                flowerScript = flower.GetComponent<FlowerScript>();
+                break;
+            }
+        }
         //print(groundCheckerRadius);
 	}
 	
 
 	// Update is called once per frame.
 	void Update () {
+        if (isInvulnerable) {
+            invulnerableTimer -= Time.deltaTime;
+        }
+        if (invulnerableTimer < 0) {
+            isInvulnerable = false;
+        }
+
         // Make player move left or right, depending on which key is pressed.
         rigidbody2D.velocity = new Vector2(Input.GetAxisRaw("Horizontal") * speed, rigidbody2D.velocity.y);
 
@@ -40,5 +59,15 @@ public class PlayerScript : MonoBehaviour {
         }
 	}
 
-    
+    void OnTriggerStay2D(Collider2D col) {
+        if (col.tag == "CreatureCollider") {
+            CreatureScript creatureScript = col.GetComponentInParent<CreatureScript>();
+            print(creatureScript);
+            if (creatureScript.isAggro && !isInvulnerable) {
+                isInvulnerable = true;
+                invulnerableTimer = invulnernableTime;
+                print("DAMAGED");
+            }
+        }
+    }
 }

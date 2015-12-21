@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BunnyScript : MonoBehaviour {
+public class BunnyScript : CreatureScript {
     
     // TODO: jumping
     //public float jumpStrength;
@@ -21,10 +21,6 @@ public class BunnyScript : MonoBehaviour {
     private float walkTimer = 0;
     private int walkDirection = 1;
 
-    [System.NonSerialized]
-    public bool isAggro = false;
-    private FlowerScript flowerScript;
-
     // Aggro bunny variables
     private bool aggroSwitch = false;  // Used to do things when switching to aggro only once.
     private float jumpTimer = 0;
@@ -37,16 +33,11 @@ public class BunnyScript : MonoBehaviour {
     private float groundCheckRadius;  // How large of a circle the checker is.
     private bool grounded;
 
-    public Transform player;
 
-
-
-    private Rigidbody2D rigidbody2D;
     
 	// Use this for initialization
 	void Start () {
-        rigidbody2D = GetComponent<Rigidbody2D>();
-        flowerScript = GameObject.FindWithTag("Flower").GetComponent<FlowerScript>();
+        base.Start();
         foreach (Transform child in transform) {
             if (child.tag == "GroundCheck") {
                 groundCheckRadius = child.GetComponent<CircleCollider2D>().radius;
@@ -74,7 +65,6 @@ public class BunnyScript : MonoBehaviour {
             if (walkTimer < 0) {
                 // Timer reset
                 isWalking = !isWalking;  // Switch walking/waiting state.
-                print(isWalking);
                 if (isWalking) {
                     walkTimer = Random.Range(minWalkTime, maxWalkTime);
                     walkDirection = (Random.value < 0.5f) ? -1 : 1;  // Randomize walk direction (-1 = left, 1 = right)
@@ -96,14 +86,12 @@ public class BunnyScript : MonoBehaviour {
             if (aggroSwitch) {
                 aggroSwitch = false;
                 rigidbody2D.velocity = Vector3.zero;
-                print("aggro");
             }
             jumpTimer -= Time.deltaTime;
             if (grounded) {
                 rigidbody2D.velocity = new Vector2(0, rigidbody2D.velocity.y);
             }
             if (jumpTimer < 0) {
-                print("jump");
                 jumpTimer = jumpTime;
                 //float dist = Vector2.Distance(transform.position, player.position);  // Distance between bunny and player.
                 bool dirFromPlayer = transform.position.x < player.position.x;  // Where player is from bunny, true is right, false is left.
@@ -111,7 +99,11 @@ public class BunnyScript : MonoBehaviour {
                 float forceY = Mathf.Sin(Mathf.Deg2Rad * jumpAngle) * jumpForce;
                 rigidbody2D.AddForce(new Vector2(forceX, forceY));
             }
-            
         }
 	}
+    void OnTriggerEnter2D(Collider2D col) {
+        if (col.tag == "Player" && isAggro) { 
+            
+        }
+    }
 }

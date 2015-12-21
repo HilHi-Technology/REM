@@ -45,7 +45,7 @@ public class ParticleScript : MonoBehaviour {
         }
 
         ParticleSystem.Particle[] particleList = new ParticleSystem.Particle[particleSystem.particleCount];
-        List<int> particleRemoveIndexList = new List<int>();
+        List<int> particleRemoveIndexList = new List<int>();  // Used to destroy the particles.
         particleSystem.GetParticles(particleList);
         if (Input.GetKey("z")) {
             // Pressed the button to attract particles
@@ -56,24 +56,18 @@ public class ParticleScript : MonoBehaviour {
                 }
             }
         }
-        for (int i = 0; i < particleList.Length; i++) {
-            // Check every particle if it is in absorption radius.
-            if (Vector2.Distance(particleList[i].position, flower.position) < flowerScript.particleAbsorbRadius) {
-                // Slate particle for removal if it is in target's absorbtion radius.
-                particleRemoveIndexList.Add(i);
-            }
-        }
-        // Sort the particles removal list largest to smallest so when removing it won't change the index of the list.
-        particleRemoveIndexList.Sort();
-        particleRemoveIndexList.Reverse();
-        // Create temp list of particles so you can do removal easily.
         List<ParticleSystem.Particle> tempList = new List<ParticleSystem.Particle>(particleList);
-        for (int i = 0; i < particleRemoveIndexList.Count; i++) {
-            // Remove all particles that are slated to be removed.
-            tempList.RemoveAt((int)particleRemoveIndexList[i]);
-            // Add saturation to the flower.
-            flowerScript.saturationPoints += 1;
-            saturationPoints -= 1;
+        for (int i = 0; i < tempList.Count; i++) {
+            // Check every particle if it is in absorption radius.
+            if (Vector2.Distance(tempList[i].position, flower.position) < flowerScript.particleAbsorbRadius) {
+                // Remove the particle.
+                tempList.RemoveAt(i);
+                i--;
+                // Add saturation to the flower.
+                flowerScript.saturationPoints += 1;
+                // Subtract saturation from this node.
+                saturationPoints -= 1;
+            }
         }
         // Convert the list back into an array.
         particleList = tempList.ToArray();
