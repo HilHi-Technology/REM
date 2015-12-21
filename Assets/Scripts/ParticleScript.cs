@@ -3,14 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class ParticleScript : MonoBehaviour {
-    public GameObject particleSystemObject;
+    //public GameObject particleSystemObject;
     private ParticleSystem particleSystem;  // The original particle system.
 
     private Transform flower;
     private FlowerScript flowerScript;
 
     private float saturation;  // 0 is gray
-    private int saturationPoints;  // Current saturation points gained by absorbing saturation particles, each particle = 1 point.
+    public int saturationPoints;  // Current saturation points gained by absorbing saturation particles, each particle = 1 point.
     public int maxSaturationPoints;  // Points needed to be fully saturated.
     private Renderer renderer;
 
@@ -18,12 +18,17 @@ public class ParticleScript : MonoBehaviour {
     public float emissionMax; 
     public float emissionMin;
 
-    public float particleTurnSpeed;
+    public float particleTurnSpeed;  // Used for particle movement smoothing
 	// Use this for initialization
 	void Start () {
         flower = GameObject.FindWithTag("Flower").transform;
         saturationPoints = maxSaturationPoints;
-        particleSystem = particleSystemObject.GetComponent<ParticleSystem>();
+        foreach (Transform child in transform) {
+            if (child.tag == "ParticleSystem") {
+                particleSystem = child.GetComponent<ParticleSystem>();
+                break;
+            }
+        }
         particleSystem.simulationSpace = ParticleSystemSimulationSpace.World;  // Make the particles play in world space.
         flowerScript = flower.GetComponent<FlowerScript>();
         renderer = GetComponent<Renderer>();
@@ -45,7 +50,6 @@ public class ParticleScript : MonoBehaviour {
         }
 
         ParticleSystem.Particle[] particleList = new ParticleSystem.Particle[particleSystem.particleCount];
-        List<int> particleRemoveIndexList = new List<int>();  // Used to destroy the particles.
         particleSystem.GetParticles(particleList);
         if (Input.GetKey("z")) {
             // Pressed the button to attract particles

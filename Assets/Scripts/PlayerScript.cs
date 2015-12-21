@@ -67,6 +67,7 @@ public class PlayerScript : MonoBehaviour {
                 isInvulnerable = true;
                 invulnerableTimer = invulnernableTime;
                 print("DAMAGED");
+                flowerScript.damageQueue = creatureScript.damage;
             }
         }
     }

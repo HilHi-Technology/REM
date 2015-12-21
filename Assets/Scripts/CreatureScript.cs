@@ -7,6 +7,7 @@ public class CreatureScript : MonoBehaviour {
 
     [System.NonSerialized]
     public bool isAggro = false;
+    public int damage;  // Damage translates into how many saturation points are lost.
 
     protected FlowerScript flowerScript;
 
