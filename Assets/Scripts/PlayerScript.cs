@@ -61,12 +61,10 @@ public class PlayerScript : MonoBehaviour {
 
     void OnTriggerStay2D(Collider2D col) {
         if (col.tag == "CreatureCollider") {
-            CreatureScript creatureScript = col.GetComponentInParent<CreatureScript>();
-            print(creatureScript);
+            CreatureScript creatureScript = col.GetComponentInParent<CreatureScript>();  // WARNING: Code bottle neck.
             if (creatureScript.isAggro && !isInvulnerable) {
                 isInvulnerable = true;
                 invulnerableTimer = invulnernableTime;
-                print("DAMAGED");
                 flowerScript.damageQueue = creatureScript.damage;
             }
         }

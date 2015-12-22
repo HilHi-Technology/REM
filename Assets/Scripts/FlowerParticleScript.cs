@@ -9,6 +9,8 @@ public class FlowerParticleScript : MonoBehaviour {
     private ParticleScript targetScript;
     private float targetAbsorbtionRadius;  // Particle will be absorbed by the target within this radius of the target.
     public float particleTurnSpeed;
+    [System.NonSerialized]
+    public Color particleColor;
 	// Use this for initialization
 	void Start () {
         particleSystem = GetComponent<ParticleSystem>();
