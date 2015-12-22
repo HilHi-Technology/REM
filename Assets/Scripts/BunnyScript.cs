@@ -33,10 +33,15 @@ public class BunnyScript : CreatureScript {
     private float groundCheckRadius;  // How large of a circle the checker is.
     private bool grounded;
 
+    public Sprite passiveSprite;
+    public Sprite aggroSprite;
+
+    SpriteRenderer spriteRenderer;
 
     
 	// Use this for initialization
 	void Start () {
+        spriteRenderer = GetComponent<SpriteRenderer>();
         base.Start();
         foreach (Transform child in transform) {
             if (child.tag == "GroundCheck") {
@@ -56,12 +61,20 @@ public class BunnyScript : CreatureScript {
                 aggroSwitch = true;
             }
         } else {
-            isAggro = false;
+            if (isAggro) {
+                isAggro = false;
+                aggroSwitch = true;
+            }
         }
         
         if (!isAggro) {
             // Passive mode
             walkTimer -= Time.deltaTime;  // Decrement timer
+            if (aggroSwitch) {
+                // Execute once when switching states
+                aggroSwitch = false;
+                spriteRenderer.sprite = passiveSprite;
+            }
             if (walkTimer < 0) {
                 // Timer reset
                 isWalking = !isWalking;  // Switch walking/waiting state.
@@ -84,8 +97,10 @@ public class BunnyScript : CreatureScript {
             // Aggro
             grounded = Physics2D.OverlapCircle(groundChecker.position, groundCheckRadius, groundLayerMask);
             if (aggroSwitch) {
+                // Execute once when switching states
                 aggroSwitch = false;
                 rigidbody2D.velocity = Vector3.zero;
+                spriteRenderer.sprite = aggroSprite;
             }
             jumpTimer -= Time.deltaTime;
             if (grounded) {
