@@ -18,6 +18,24 @@ public class FlowerParticleScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (targetScript.saturationPoints == targetScript.maxSaturationPoints) {
+            GameObject[] ColorNodeList = GameObject.FindGameObjectsWithTag("ColorNode");
+            float shortestDist = 99999;
+            GameObject closestNode = null;
+            foreach (GameObject obj in ColorNodeList) {
+                float dist = Vector2.Distance(transform.position, obj.transform.position);
+                if (dist < shortestDist) {
+                    ParticleScript tempObjScript = obj.GetComponent<ParticleScript>();
+                    if (tempObjScript.saturationPoints != tempObjScript.maxSaturationPoints) { 
+                        shortestDist = dist;
+                        closestNode = obj;
+                    }
+                }
+            }
+            target = closestNode.transform;
+            targetScript = target.GetComponent<ParticleScript>();
+            targetAbsorbtionRadius = target.GetComponent<CircleCollider2D>().radius;
+        }
         ParticleSystem.Particle[] particleList = new ParticleSystem.Particle[particleSystem.particleCount];
         particleSystem.GetParticles(particleList);
         for (int i = 0; i < particleList.Length; i++) {
