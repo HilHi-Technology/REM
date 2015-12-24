@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#pragma warning disable 0108  // Use new keyword if hiding was intended
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -18,7 +19,7 @@ public class ParticleScript : MonoBehaviour {
     public float emissionMax; 
     public float emissionMin;
 
-    public float particleTurnSpeed;  // Used for particle movement smoothing
+    public float particleAttractionSpeed;  // Used for particle movement smoothing
 	// Use this for initialization
 	void Start () {
         flower = GameObject.FindWithTag("Flower").transform;
@@ -56,7 +57,7 @@ public class ParticleScript : MonoBehaviour {
             for (int i = 0; i < particleList.Length; i++) {
                 if (Vector2.Distance(particleList[i].position, flower.position) < flowerScript.particleAttractionRadius) {
                     // Particles move toward target.
-                    particleList[i].velocity = Vector3.Lerp(particleList[i].velocity, new Vector3(flower.position.x - particleList[i].position.x, flower.position.y - particleList[i].position.y, -1), Time.deltaTime * particleTurnSpeed);
+                    particleList[i].velocity = Vector3.Lerp(particleList[i].velocity, new Vector3(flower.position.x - particleList[i].position.x, flower.position.y - particleList[i].position.y, -1), Time.deltaTime * particleAttractionSpeed);
                 }
             }
         }

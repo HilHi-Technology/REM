@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#pragma warning disable 0108  // Use new keyword if hiding was intended
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -8,7 +9,7 @@ public class FlowerParticleScript : MonoBehaviour {
     public Transform target;  // Target for the particles to attract to. 
     private ParticleScript targetScript;
     private float targetAbsorbtionRadius;  // Particle will be absorbed by the target within this radius of the target.
-    public float particleTurnSpeed;
+    public float particleAttractionSpeed;
     [System.NonSerialized]
     public Color particleColor;
 	// Use this for initialization
@@ -41,7 +42,7 @@ public class FlowerParticleScript : MonoBehaviour {
         ParticleSystem.Particle[] particleList = new ParticleSystem.Particle[particleSystem.particleCount];
         particleSystem.GetParticles(particleList);
         for (int i = 0; i < particleList.Length; i++) {
-            particleList[i].velocity = Vector3.Lerp(particleList[i].velocity, new Vector3(target.position.x - particleList[i].position.x, target.position.y - particleList[i].position.y, -1), Time.deltaTime * particleTurnSpeed);
+            particleList[i].velocity = Vector3.Lerp(particleList[i].velocity, new Vector3(target.position.x - particleList[i].position.x, target.position.y - particleList[i].position.y, -1), Time.deltaTime * particleAttractionSpeed);
         }
         List<ParticleSystem.Particle> tempList = new List<ParticleSystem.Particle>(particleList);
         for (int i = 0; i < tempList.Count; i++) {

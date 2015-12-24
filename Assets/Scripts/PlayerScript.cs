@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#pragma warning disable 0108  // Use new keyword if hiding was intended
+using UnityEngine;
 using System.Collections;
 
 public class PlayerScript : MonoBehaviour {
