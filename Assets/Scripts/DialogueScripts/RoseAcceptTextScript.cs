@@ -9,9 +9,7 @@ public class RoseAcceptTextScript : TextScript {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-        if (triggered) {
-            textComponent.enabled = true;
-        }
+	protected override void Update () {
+        base.Update();
 	}
 }
