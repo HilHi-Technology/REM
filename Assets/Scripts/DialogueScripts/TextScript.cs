@@ -6,12 +6,18 @@ public class TextScript : MonoBehaviour {
     [System.NonSerialized]
     public bool triggered = false;
     protected Text textComponent;
-    public string text;  // Actual display text for the textbox, the one in the editor is just for show.
+    
+    [System.NonSerialized]
+    public string text;  // Actual text to be displayed. 
+    // Text to be displayed, can be entered in the editor.
+    public string defaultText;
+
 	// Use this for initialization
 	protected virtual void Start () {
         textComponent = GetComponent<Text>();
         textComponent.enabled = false;
-        text = text.Replace("\\n", "\n");
+        defaultText = defaultText.Replace("\\n", "\n");
+        text = defaultText;
 	}
 	
 	// Update is called once per frame

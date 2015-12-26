@@ -23,10 +23,7 @@ public class DialogueScrollScript : MonoBehaviour {
 	void Update () {
         
         timer -= Time.deltaTime;
-        print(counter);
         if (timer <= 0 && counter < previousText.Length) {
-            print("Something");
-            print(counter);
             textComponent.text += previousText[counter];
             timer = scrollDelay;
             counter++;

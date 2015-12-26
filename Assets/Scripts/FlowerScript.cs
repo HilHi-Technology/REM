@@ -34,7 +34,7 @@ public class FlowerScript : MonoBehaviour {
         saturation = (float)saturationPoints / maxSaturationPoints;
         renderer.material.SetFloat("_EffectAmount", saturation);
         if (damageQueue > 0) {
-            damageQueue = Mathf.Clamp(damageQueue, 0, saturationPoints);  // Can't lose more saturation than you have.
+            damageQueue = Mathf.Clamp(damageQueue, 1, saturationPoints);  // Can't lose more saturation than you have.
             // Creates a particle system which has a script that will direct particles to the nearest node.
             GameObject particleSystemObject = Instantiate(particleSystem, transform.position, Quaternion.identity) as GameObject;
             FlowerParticleScript particleScript = particleSystemObject.GetComponent<FlowerParticleScript>();
@@ -42,7 +42,7 @@ public class FlowerScript : MonoBehaviour {
 
             // Find the nearest color node
             float shortestDist = 99999;
-            GameObject closestNode = null;
+            GameObject closestNode = default(GameObject);
             foreach (GameObject obj in ColorNodeList) {
                 float dist = Vector2.Distance(transform.position, obj.transform.position);
                 if ( dist < shortestDist) { 
@@ -51,16 +51,15 @@ public class FlowerScript : MonoBehaviour {
                 }
             }
 
-            //
-            print(closestNode);
             ParticleSystem tempParticleSystem = particleSystemObject.GetComponent<ParticleSystem>();
-            ParticleSystem nodeParticleSystem = null;
+            ParticleSystem nodeParticleSystem = default(ParticleSystem);
             foreach (Transform child in closestNode.transform) {
                 if (child.tag == "ParticleSystem") {
-                    nodeParticleSystem = child.GetComponent<ParticleSystem>();
+                    nodeParticleSystem = child.GetComponent<ParticleSystem>();  // WARNING: Possible bottleneck.
+                    break;
                 }
             }
-            tempParticleSystem.startColor = nodeParticleSystem.startColor;  // WARNING: Possible bottleneck.
+            tempParticleSystem.startColor = nodeParticleSystem.startColor;  
             tempParticleSystem.Emit(damageQueue);
             saturationPoints -= damageQueue;
             
